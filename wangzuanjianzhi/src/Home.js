@@ -9,6 +9,7 @@ import {
     ToastAndroid,
 } from 'react-native';
 import Swiper from 'react-native-swiper'
+// import Toast, {DURATION} from 'react-native-easy-toast'
 var Dimensions = require('Dimensions'); //必须要写这一行，否则报错，无法找到这个变量
 var ScreenWidth = Dimensions.get('window').width;
 var ScreenHeight = Dimensions.get('window').height;
@@ -51,7 +52,10 @@ export default class Home extends Component {
         //这里返回的就是每个Item
         return (
             <TouchableOpacity activeOpacity={0.5}
-                              onPress={() => ToastAndroid.show(item.title, ToastAndroid.SHORT)}>
+                              onPress={()=>{
+                                  // this.refs.toast.show('hello world!');
+                              }}
+            >
                 <View style={styles.item}>
                     {/*左边的图片*/}
                     <Image source={{uri: item.images[0]}} style={styles.image}/>
@@ -64,6 +68,7 @@ export default class Home extends Component {
                     </View>
                 </View>
             </TouchableOpacity>
+
         )
     };
 
@@ -173,6 +178,7 @@ export default class Home extends Component {
                                     // onEndReachedThreshold={0}
                                     // onEndReached={this.onEndReached}
                                 />
+                {/*<Toast ref="toast"/>*/}
 
             </View>
         );
