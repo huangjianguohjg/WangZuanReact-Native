@@ -9,11 +9,11 @@ import {
     ToastAndroid,
 } from 'react-native';
 import Swiper from 'react-native-swiper'
-// import Toast, {DURATION} from 'react-native-easy-toast'
 var Dimensions = require('Dimensions'); //必须要写这一行，否则报错，无法找到这个变量
 var ScreenWidth = Dimensions.get('window').width;
 var ScreenHeight = Dimensions.get('window').height;
 var ScreenScale = Dimensions.get('window').scale;
+import HttpUtils from './HttpUtils'
 export default class Home extends Component {
 
     static defaultProps = {
@@ -51,23 +51,18 @@ export default class Home extends Component {
     getView({item}) {
         //这里返回的就是每个Item
         return (
-            <TouchableOpacity activeOpacity={0.5}
-                              onPress={()=>{
-                                  // this.refs.toast.show('hello world!');
-                              }}
-            >
                 <View style={styles.item}>
-                    {/*左边的图片*/}
-                    <Image source={{uri: item.images[0]}} style={styles.image}/>
-                    <View style={styles.left}>
-                        {/*右边的View*/}
-                        <Text style={{marginTop: 15, color: '#333333'}}>{item.title}</Text>
-                        <View style={styles.content}>
-                            <Text style={{flex: 1, textAlign: 'right'}}>{item.id + ''}</Text>
-                        </View>
+                    <View style={{flexDirection:'row',marginTop:16}}>
+                        <Text style={{fontSize:17,color:'black',fontWeight: 'bold'}}>联系人+{item.name}</Text>
+                        <Text style={{fontWeight: 'bold',fontSize:15,color:'blue',position:'absolute',left:ScreenWidth-160}}>TEL:18643688353</Text>
+                    </View>
+                    <Text style={{fontSize:15,marginTop:13}}>帮我到图书馆站一下座位💺好不好，给你钱的那种，好不好，嘿嘿😝，么么哒</Text>
+                    <View style={{flexDirection:'row',marginTop:15,marginBottom:15}}>
+                        <Text style={{color:'red',fontWeight: 'bold',fontSize:18}}>$60</Text>
+                        <Text style={{paddingTop:5,paddingBottom:5,paddingLeft:10,paddingRight:10,backgroundColor:'red',color:'white',fontSize:15,position:'absolute',left:ScreenWidth-160}}>举报</Text>
+                        <Text style={{paddingTop:5,paddingBottom:5,paddingLeft:10,paddingRight:10,backgroundColor:'yellow',color:'white',fontSize:15,position:'absolute',left:ScreenWidth-80}}>接单</Text>
                     </View>
                 </View>
-            </TouchableOpacity>
 
         )
     };
@@ -77,26 +72,7 @@ export default class Home extends Component {
      * @param item
      * @param index
      */
-    keyExtractor = (item, index) => item.id;
-
-    /**
-     * 尾布局
-     */
-    footer = () => {
-        return (
-            <Text style={{
-                marginTop: 10,
-                backgroundColor: '#EB3695',
-                color: 'white',
-                fontSize: 18,
-                textAlign: 'center',
-                textAlignVertical: 'center',
-                height: 150,
-            }}>我是尾布局</Text>
-        )
-    };
-
-    count = 0;//下拉刷新的次数
+    keyExtractor = (item, index) => item.toString();
 
     /**
      * 下拉属性
@@ -109,10 +85,6 @@ export default class Home extends Component {
         //延时加载
         const timer = setTimeout(() => {
             clearTimeout(timer);
-            //往数组的第一位插入数据，模拟数据新增 , unshift()会返回数组的长度
-            this.state.data.unshift(new this.ItemData('https://pic2.zhimg.com/v2-8f11b41f995ca5340510c1def1c003d1.jpg',
-                '下拉刷新添加的数据——————' + this.count, 475843));
-            this.count++;
             this.setState({
                 refreshing: false,
             });
@@ -143,7 +115,9 @@ export default class Home extends Component {
             .then((response) => response.json())
             .then((response) => {
                 //解析json数据
-                var json = response['stories'];
+                console.log(response);
+                console.log('hdshjdhjasjdhjkhsdajhkjhsdajhkjhdsa');
+                var json =  response['stories'];
                 //更新状态机
                 this.setState({
                     data: json,
@@ -153,8 +127,17 @@ export default class Home extends Component {
                 if (error) {
                     //网络错误处理
                     console.log('error', error);
+                    console.log('----------------------------');
                 }
             });
+        // HttpUtils.get('http://api.fewpod.com/api/jobs')
+        //     .then(result => {
+        //                 var json = result['data']['list'];
+        //                 //更新状态机
+        //                 this.setState({
+        //                     data: json,
+        //                 });
+        //     });
     }
 
     render() {
@@ -178,8 +161,6 @@ export default class Home extends Component {
                                     // onEndReachedThreshold={0}
                                     // onEndReached={this.onEndReached}
                                 />
-                {/*<Toast ref="toast"/>*/}
-
             </View>
         );
     }
@@ -237,6 +218,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-end',
     }
-
 
 });
